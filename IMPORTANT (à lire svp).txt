@@ -1,0 +1,5 @@
+Assurez vous bien que python est installé (https://www.python.org/)
+
+Ensuite exécutez setup.bat qui lancera la commande "pip install -r requirements.txt" qui est essentiel au fonctionnement du logiciel.
+
+Ensuite plus qu'à lancer "SPECTER (osint).exe".

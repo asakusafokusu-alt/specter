@@ -1,0 +1,946 @@
+[
+ {
+  "name": "GitHub",
+  "category": "Code",
+  "url": "https://github.com/{u}",
+  "check": "json",
+  "request": "https://api.github.com/users/{u}",
+  "json_any": [
+   "login"
+  ],
+  "image": "avatar_url",
+  "enrich": {
+   "name": "name",
+   "company": "company",
+   "location": "location",
+   "bio": "bio",
+   "blog": "blog",
+   "twitter": "twitter_username",
+   "public email": "email",
+   "followers": "followers",
+   "following": "following",
+   "repositories": "public_repos",
+   "gists": "public_gists",
+   "hireable": "hireable",
+   "account type": "type",
+   "created": "created_at",
+   "updated": "updated_at"
+  }
+ },
+ {
+  "name": "GitLab",
+  "category": "Code",
+  "url": "https://gitlab.com/{u}",
+  "check": "json",
+  "request": "https://gitlab.com/api/v4/users?username={u}",
+  "json_any": [
+   "0.username"
+  ],
+  "json_equals": [
+   {
+    "path": "0.username",
+    "value": "{u}"
+   }
+  ],
+  "image": "0.avatar_url",
+  "enrich": {
+   "username": "0.username",
+   "name": "0.name",
+   "state": "0.state",
+   "bio": "0.bio",
+   "location": "0.location",
+   "public email": "0.public_email",
+   "website": "0.website_url",
+   "followers": "0.followers",
+   "following": "0.following",
+   "joined": "0.created_at",
+   "last activity": "0.last_activity_on"
+  }
+ },
+ {
+  "name": "SourceHut",
+  "category": "Code",
+  "url": "https://git.sr.ht/~{u}",
+  "check": "status",
+  "expect": [
+   200
+  ]
+ },
+ {
+  "name": "Dev.to",
+  "category": "Code",
+  "url": "https://dev.to/{u}",
+  "check": "json",
+  "request": "https://dev.to/api/users/by_username?url={u}",
+  "json_any": [
+   "username"
+  ],
+  "json_equals": [
+   {
+    "path": "username",
+    "value": "{u}"
+   }
+  ],
+  "image": "profile_image",
+  "enrich": {
+   "username": "username",
+   "name": "name",
+   "joined": "joined_at",
+   "summary": "summary",
+   "location": "location",
+   "website": "website_url",
+   "twitter": "twitter_username",
+   "github": "github_username"
+  }
+ },
+ {
+  "name": "Docker Hub",
+  "category": "Code",
+  "url": "https://hub.docker.com/u/{u}",
+  "check": "json",
+  "request": "https://hub.docker.com/v2/users/{u}/",
+  "json_any": [
+   "username"
+  ],
+  "image": "gravatar_url",
+  "enrich": {
+   "username": "username",
+   "name": "full_name",
+   "location": "location",
+   "company": "company",
+   "joined": "date_joined",
+   "last seen": "last_seen"
+  }
+ },
+ {
+  "name": "Hacker News",
+  "category": "Tech",
+  "url": "https://news.ycombinator.com/user?id={u}",
+  "check": "json",
+  "request": "https://hacker-news.firebaseio.com/v0/user/{u}.json",
+  "json_any": [
+   "id"
+  ],
+  "enrich": {
+   "username": "id",
+   "karma": "karma",
+   "created": "created",
+   "about": "about"
+  }
+ },
+ {
+  "name": "Stack Overflow",
+  "category": "Tech",
+  "url": "https://stackoverflow.com/users?tab=Reputation&search={u}",
+  "check": "json",
+  "request": "https://api.stackexchange.com/2.3/users?inname={u}&site=stackoverflow",
+  "json_any": [
+   "items.0.display_name"
+  ],
+  "json_equals": [
+   {
+    "path": "items.0.display_name",
+    "value": "{u}"
+   }
+  ],
+  "url_from": "items.0.link",
+  "image": "items.0.profile_image",
+  "enrich": {
+   "name": "items.0.display_name",
+   "reputation": "items.0.reputation",
+   "location": "items.0.location",
+   "website": "items.0.website_url",
+   "user id": "items.0.user_id",
+   "badges": "items.0.badge_counts",
+   "joined": "items.0.creation_date",
+   "last active": "items.0.last_access_date"
+  }
+ },
+ {
+  "name": "Keybase",
+  "category": "Identity",
+  "url": "https://keybase.io/{u}",
+  "check": "json",
+  "request": "https://keybase.io/_/api/1.0/user/lookup.json?usernames={u}",
+  "json_any": [
+   "them.0.basics.username"
+  ],
+  "image": "them.0.pictures.primary.url",
+  "enrich": {
+   "username": "them.0.basics.username",
+   "full name": "them.0.profile.full_name",
+   "location": "them.0.profile.location",
+   "bio": "them.0.profile.bio",
+   "proof summary": "them.0.proofs_summary"
+  }
+ },
+ {
+  "name": "Hugging Face",
+  "category": "AI",
+  "url": "https://huggingface.co/{u}",
+  "check": "json",
+  "request": "https://huggingface.co/api/users/{u}/overview",
+  "json_any": [
+   "user",
+   "fullname"
+  ],
+  "image": "avatarUrl",
+  "enrich": {
+   "username": "user",
+   "name": "fullname",
+   "followers": "numFollowers",
+   "models": "numModels",
+   "datasets": "numDatasets",
+   "spaces": "numSpaces",
+   "pro": "isPro"
+  }
+ },
+ {
+  "name": "Codeforces",
+  "category": "Code",
+  "url": "https://codeforces.com/profile/{u}",
+  "check": "json",
+  "request": "https://codeforces.com/api/user.info?handles={u}",
+  "json_any": [
+   "result.0.handle"
+  ],
+  "json_equals": [
+   {
+    "path": "result.0.handle",
+    "value": "{u}"
+   }
+  ],
+  "image": "result.0.titlePhoto",
+  "enrich": {
+   "handle": "result.0.handle",
+   "first name": "result.0.firstName",
+   "last name": "result.0.lastName",
+   "rank": "result.0.rank",
+   "rating": "result.0.rating",
+   "max rank": "result.0.maxRank",
+   "max rating": "result.0.maxRating",
+   "organization": "result.0.organization",
+   "city": "result.0.city",
+   "country": "result.0.country",
+   "friends": "result.0.friendOfCount",
+   "contribution": "result.0.contribution"
+  }
+ },
+ {
+  "name": "CodeChef",
+  "category": "Code",
+  "url": "https://www.codechef.com/users/{u}",
+  "check": "marker",
+  "marker": "CodeChef User Profile"
+ },
+ {
+  "name": "Codewars",
+  "category": "Code",
+  "url": "https://www.codewars.com/users/{u}",
+  "check": "json",
+  "request": "https://www.codewars.com/api/v1/users/{u}",
+  "json_any": [
+   "username"
+  ],
+  "json_equals": [
+   {
+    "path": "username",
+    "value": "{u}"
+   }
+  ],
+  "enrich": {
+   "username": "username",
+   "name": "name",
+   "honor": "honor",
+   "clan": "clan",
+   "leaderboard": "leaderboardPosition"
+  }
+ },
+ {
+  "name": "Lichess",
+  "category": "Gaming",
+  "url": "https://lichess.org/@/{u}",
+  "check": "json",
+  "request": "https://lichess.org/api/user/{u}",
+  "json_any": [
+   "id"
+  ],
+  "json_equals": [
+   {
+    "path": "id",
+    "value": "{u}"
+   }
+  ],
+  "enrich": {
+   "username": "username",
+   "name": "username",
+   "patron": "patron",
+   "created": "createdAt",
+   "seen": "seenAt"
+  }
+ },
+ {
+  "name": "Chess.com",
+  "category": "Gaming",
+  "url": "https://www.chess.com/member/{u}",
+  "check": "json",
+  "request": "https://api.chess.com/pub/player/{u}",
+  "json_any": [
+   "username"
+  ],
+  "image": "avatar",
+  "enrich": {
+   "name": "name",
+   "location": "location",
+   "followers": "followers",
+   "country": "country",
+   "joined": "joined",
+   "last online": "last_online",
+   "status": "status",
+   "league": "league",
+   "streamer": "is_streamer",
+   "verified": "verified",
+   "twitch": "twitch_url"
+  }
+ },
+ {
+  "name": "Minecraft",
+  "category": "Gaming",
+  "url": "https://namemc.com/profile/{u}",
+  "check": "json",
+  "request": "https://api.mojang.com/users/profiles/minecraft/{u}",
+  "json_any": [
+   "name"
+  ],
+  "json_equals": [
+   {
+    "path": "name",
+    "value": "{u}"
+   }
+  ],
+  "image_template": "https://crafatar.com/avatars/{u}?size=160&overlay",
+  "image_value": "id",
+  "enrich": {
+   "username": "name",
+   "uuid": "id"
+  }
+ },
+ {
+  "name": "Roblox",
+  "category": "Gaming",
+  "url": "https://www.roblox.com/search/users?keyword={u}",
+  "check": "post_json",
+  "request": "https://users.roblox.com/v1/usernames/users",
+  "body": {
+   "usernames": [
+    "{u}"
+   ],
+   "excludeBannedUsers": false
+  },
+  "json_any": [
+   "data.0.name"
+  ],
+  "json_equals": [
+   {
+    "path": "data.0.name",
+    "value": "{u}"
+   }
+  ],
+  "image_api": "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds={u}&size=150x150&format=Png",
+  "image_api_id": "data.0.id",
+  "image_api_value": "data.0.imageUrl",
+  "enrich": {
+   "username": "data.0.name",
+   "display name": "data.0.displayName",
+   "user id": "data.0.id",
+   "description": "data.0.description",
+   "created": "data.0.created",
+   "verified": "data.0.hasVerifiedBadge",
+   "banned": "data.0.isBanned"
+  }
+ },
+ {
+  "name": "Steam",
+  "category": "Gaming",
+  "url": "https://steamcommunity.com/id/{u}",
+  "check": "steam",
+  "request": "https://steamcommunity.com/id/{u}/?xml=1"
+ },
+ {
+  "name": "Twitch",
+  "category": "Streaming",
+  "url": "https://www.twitch.tv/{u}",
+  "check": "title",
+  "title_marker": "{u} - Twitch"
+ },
+ {
+  "name": "SoundCloud",
+  "category": "Music",
+  "url": "https://soundcloud.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Patreon",
+  "category": "Creator",
+  "url": "https://www.patreon.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Launchpad",
+  "category": "Code",
+  "url": "https://launchpad.net/~{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ],
+  "absent": "does not use Launchpad"
+ },
+ {
+  "name": "Wikipedia",
+  "category": "Reference",
+  "url": "https://en.wikipedia.org/wiki/User:{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Dribbble",
+  "category": "Creative",
+  "url": "https://dribbble.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Bluesky",
+  "category": "Social",
+  "url": "https://bsky.app/profile/{u}.bsky.social",
+  "check": "json",
+  "request": "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor={u}.bsky.social",
+  "json_any": [
+   "did"
+  ],
+  "json_equals": [
+   {
+    "path": "handle",
+    "value": "{u}.bsky.social"
+   }
+  ],
+  "image": "avatar",
+  "enrich": {
+   "handle": "handle",
+   "display name": "displayName",
+   "bio": "description",
+   "followers": "followersCount",
+   "follows": "followsCount",
+   "posts": "postsCount",
+   "joined": "createdAt",
+   "labels": "labels"
+  }
+ },
+ {
+  "name": "Mastodon",
+  "category": "Social",
+  "url": "https://mastodon.social/@{u}",
+  "check": "json",
+  "request": "https://mastodon.social/api/v1/accounts/lookup?acct={u}",
+  "json_any": [
+   "username"
+  ],
+  "json_equals": [
+   {
+    "path": "username",
+    "value": "{u}"
+   }
+  ],
+  "image": "avatar",
+  "enrich": {
+   "username": "username",
+   "display name": "display_name",
+   "bio": "note",
+   "followers": "followers_count",
+   "following": "following_count",
+   "posts": "statuses_count",
+   "joined": "created_at",
+   "locked": "locked",
+   "bot": "bot",
+   "fields": "fields"
+  }
+ },
+ {
+  "name": "Duolingo",
+  "category": "Learning",
+  "url": "https://www.duolingo.com/profile/{u}",
+  "check": "json",
+  "request": "https://www.duolingo.com/2017-06-30/users?username={u}",
+  "json_any": [
+   "users.0.username"
+  ],
+  "json_equals": [
+   {
+    "path": "users.0.username",
+    "value": "{u}"
+   }
+  ],
+  "image": "users.0.picture",
+  "enrich": {
+   "username": "users.0.username",
+   "name": "users.0.name",
+   "bio": "users.0.bio",
+   "streak": "users.0.streak",
+   "total xp": "users.0.totalXp",
+   "plus": "users.0.hasPlus",
+   "country": "users.0.profileCountry",
+   "joined": "users.0.creationDate"
+  }
+ },
+ {
+  "name": "Telegram",
+  "category": "Chat",
+  "url": "https://t.me/{u}",
+  "check": "marker",
+  "marker": "tgme_page_title"
+ },
+ {
+  "name": "Reddit",
+  "category": "Social",
+  "url": "https://www.reddit.com/user/{u}",
+  "check": "manual",
+  "note": "Reddit blocks automated checks. Open the profile manually."
+ },
+ {
+  "name": "X (Twitter)",
+  "category": "Social",
+  "url": "https://x.com/{u}",
+  "check": "manual",
+  "note": "Requires a logged-in session. Open the profile manually."
+ },
+ {
+  "name": "Instagram",
+  "category": "Social",
+  "url": "https://www.instagram.com/{u}/",
+  "check": "manual",
+  "note": "Blocks automated checks. Open the profile manually."
+ },
+ {
+  "name": "Facebook",
+  "category": "Social",
+  "url": "https://www.facebook.com/{u}",
+  "check": "manual",
+  "note": "Requires login for most profiles."
+ },
+ {
+  "name": "LinkedIn",
+  "category": "Professional",
+  "url": "https://www.linkedin.com/in/{u}",
+  "check": "manual",
+  "note": "Profile slug may differ from the handle. Requires login."
+ },
+ {
+  "name": "TikTok",
+  "category": "Social",
+  "url": "https://www.tiktok.com/@{u}",
+  "check": "manual",
+  "note": "Blocks automated checks. Open the profile manually."
+ },
+ {
+  "name": "Pinterest",
+  "category": "Social",
+  "url": "https://www.pinterest.com/{u}/",
+  "check": "manual"
+ },
+ {
+  "name": "Snapchat",
+  "category": "Social",
+  "url": "https://www.snapchat.com/add/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Threads",
+  "category": "Social",
+  "url": "https://www.threads.net/@{u}",
+  "check": "manual",
+  "note": "Requires an Instagram session for full profiles."
+ },
+ {
+  "name": "YouTube",
+  "category": "Video",
+  "url": "https://www.youtube.com/@{u}",
+  "check": "manual",
+  "note": "Handle lookup may be blocked by a consent interstitial."
+ },
+ {
+  "name": "Medium",
+  "category": "Writing",
+  "url": "https://medium.com/@{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Substack",
+  "category": "Writing",
+  "url": "https://{u}.substack.com",
+  "check": "manual"
+ },
+ {
+  "name": "Behance",
+  "category": "Creative",
+  "url": "https://www.behance.net/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "DeviantArt",
+  "category": "Creative",
+  "url": "https://www.deviantart.com/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Flickr",
+  "category": "Creative",
+  "url": "https://www.flickr.com/people/{u}/",
+  "check": "manual"
+ },
+ {
+  "name": "Unsplash",
+  "category": "Creative",
+  "url": "https://unsplash.com/@{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Product Hunt",
+  "category": "Professional",
+  "url": "https://www.producthunt.com/@{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Ko-fi",
+  "category": "Creator",
+  "url": "https://ko-fi.com/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "CodePen",
+  "category": "Code",
+  "url": "https://codepen.io/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "npm",
+  "category": "Code",
+  "url": "https://www.npmjs.com/~{u}",
+  "check": "manual",
+  "note": "Registry hides user records; the profile page is behind a browser check."
+ },
+ {
+  "name": "Bitbucket",
+  "category": "Code",
+  "url": "https://bitbucket.org/{u}/",
+  "check": "manual"
+ },
+ {
+  "name": "Codeberg",
+  "category": "Code",
+  "url": "https://codeberg.org/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Exercism",
+  "category": "Code",
+  "url": "https://exercism.org/profiles/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "TryHackMe",
+  "category": "Security",
+  "url": "https://tryhackme.com/p/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "HackerOne",
+  "category": "Security",
+  "url": "https://hackerone.com/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Kaggle",
+  "category": "Data",
+  "url": "https://www.kaggle.com/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Vimeo",
+  "category": "Video",
+  "url": "https://vimeo.com/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Goodreads",
+  "category": "Reference",
+  "url": "https://www.goodreads.com/{u}",
+  "check": "manual"
+ },
+ {
+  "name": "Letterboxd",
+  "category": "Reference",
+  "url": "https://letterboxd.com/{u}/",
+  "check": "manual"
+ },
+ {
+  "name": "Spotify",
+  "category": "Music",
+  "url": "https://open.spotify.com/user/{u}",
+  "check": "manual",
+  "note": "Spotify user IDs are opaque; profile URLs may not use the handle."
+ },
+ {
+  "name": "guns.lol",
+  "category": "Social",
+  "url": "https://guns.lol/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ],
+  "absent": "username not found"
+ },
+ {
+  "name": "Linktree",
+  "category": "Social",
+  "url": "https://linktr.ee/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "About.me",
+  "category": "Identity",
+  "url": "https://about.me/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Solo.to",
+  "category": "Social",
+  "url": "https://solo.to/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Bio.link",
+  "category": "Social",
+  "url": "https://bio.link/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "AllMyLinks",
+  "category": "Social",
+  "url": "https://allmylinks.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Buy Me a Coffee",
+  "category": "Creator",
+  "url": "https://www.buymeacoffee.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Gumroad",
+  "category": "Creator",
+  "url": "https://gumroad.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Fiverr",
+  "category": "Professional",
+  "url": "https://www.fiverr.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Scratch",
+  "category": "Learning",
+  "url": "https://scratch.mit.edu/users/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "AtCoder",
+  "category": "Code",
+  "url": "https://atcoder.jp/users/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "JSFiddle",
+  "category": "Code",
+  "url": "https://jsfiddle.net/user/{u}/",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "RubyGems",
+  "category": "Code",
+  "url": "https://rubygems.org/profiles/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Lobsters",
+  "category": "Tech",
+  "url": "https://lobste.rs/~{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Slashdot",
+  "category": "Tech",
+  "url": "https://slashdot.org/~{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Pastebin",
+  "category": "Tech",
+  "url": "https://pastebin.com/u/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "MyAnimeList",
+  "category": "Gaming",
+  "url": "https://myanimelist.net/profile/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Genius",
+  "category": "Music",
+  "url": "https://genius.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ },
+ {
+  "name": "Gravatar",
+  "category": "Identity",
+  "url": "https://gravatar.com/{u}",
+  "check": "status",
+  "expect": [
+   200
+  ],
+  "missing": [
+   404
+  ]
+ }
+]
